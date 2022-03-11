@@ -1,0 +1,13 @@
+GET http://localhost:3000/users/622b1390ca003bdf5c10d86c
+####
+
+POST http://localhost:3000/users/
+Content-Type: application/json
+
+{
+    "name": "Игнат"
+
+}
+
+###
+GET  http://localhost:3000/users/622b1390ca003bdf5c10d86b
