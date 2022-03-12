@@ -21,13 +21,24 @@ app.use(express.static(PUBLIC_FOLDER))
 
 
 
+app.use((req, res, next) => {
+  req.user = {
+    _id: '622c2f1ccfb30eab6d387ea0' // вставьте сюда _id созданного в предыдущем пункте пользователя
+  };
+
+  next();
+});
 
 
 
-
-async function main(){
+async function main() {
   console.log('trying to connect')
-  await mongoose.connect('mongodb://localhost:27017/users')
+  await mongoose.connect('mongodb://localhost:27017/mestodb'),
+  {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  }
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
   })

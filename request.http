@@ -1,13 +1,45 @@
-GET http://localhost:3000/users/622b1390ca003bdf5c10d86c
+GET http://localhost:3000/users/
 ####
 
 POST http://localhost:3000/users/
 Content-Type: application/json
 
 {
-    "name": "Игнат"
+    "name": "Biba2",
+    "about": "Boba",
+    "avatar": "Avatar.png"
 
 }
 
 ###
-GET  http://localhost:3000/users/622b1390ca003bdf5c10d86b
+GET  http://localhost:3000/users/622b1bda975232036788183d
+
+
+###################################################################
+
+GET http://localhost:3000/cards/
+
+###
+
+POST http://localhost:3000/cards/
+Content-Type: application/json
+
+{
+  "name": "valya",
+"link": "dasdasdasd",
+"owner": "vasya",
+"likes": [],
+"createdAt": "2013-01-08"
+}
+
+########
+DELETE  http://localhost:3000/cards/
+Content-Type: application/json
+
+{
+  "name": "valya",
+"link": "dasdasdasd",
+"owner": "vasya",
+"likes": [],
+"createdAt": "2013-01-08"
+}
