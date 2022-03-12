@@ -1,4 +1,4 @@
-const { Card  } = require('../models/cardmodel');
+const { Card } = require('../models/cardmodel');
 
 
 exports.getCards = (req, res) => {
@@ -8,14 +8,37 @@ exports.getCards = (req, res) => {
 };
 
 exports.deleteCardById = (req, res) => {
-  Card.findByIdAndDelete(req.params.id)
+  Card.findByIdAndDelete(req.params.cardId)
     .then(card => res.send(card))
     .catch(() => res.status(500).send({ message: 'Something broke!' }))
 };
 
 exports.createCard = (req, res) => {
-
-  Card.create(req.body)
+  const ownerId = req.user._id
+  const { name, link } = req.body;
+  Card.create({ name, link, owner: ownerId })
     .then(card => res.send(card))
     .catch(() => res.status(500).send({ message: 'Something broke!' }))
 }
+
+
+exports.addLike = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  )
+  .then(card => res.send(card))
+  .catch(() => res.status(500).send({ message: 'Something broke!' }))
+};
+
+
+exports.dislikeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true },
+  )
+  .then(card => res.send(card))
+  .catch(() => res.status(500).send({ message: 'Something broke!' }))
+};
