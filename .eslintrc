@@ -5,7 +5,8 @@
   },
   "extends": [
     "plugin:react/recommended",
-    "airbnb"
+    "airbnb",
+    "airbnb-base"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -28,3 +29,12 @@
     ]
   }
 }
+
+//я не знаю, у меня миллиард непонятных ошибок с этим
+
+// {
+//   "extends": "airbnb-base",
+//   "rules": {
+//     "no-underscore-dangle": ["error",{"allow":["_id"]}]
+//   }
+// }

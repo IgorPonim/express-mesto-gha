@@ -1,6 +1,5 @@
 const { Card } = require('../models/cardmodel');
 
-
 exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
@@ -17,20 +16,15 @@ exports.deleteCardById = (req, res) => {
       }
     })
     .catch((err) => res.status(500).send({ message: 'Ошибка по умолчанию.', ...err }));
-
 };
-
-
-
 
 exports.createCard = (req, res) => {
   const ownerId = req.user._id
   const { name, link } = req.body;
   Card.create({ name, link, owner: ownerId })
-    .then(card => res.status(200).send(card))
-    .catch((err) => res.status(500).send({ message: 'Ошибка по умолчанию.', ...err }));
+    .then(card => res.send(card)).status(200)
+    .catch(() => res.status(500).send({ message: 'Something broke!' }))
 }
-
 
 exports.addLike = (req, res) => {
   Card.findByIdAndUpdate(
@@ -41,7 +35,6 @@ exports.addLike = (req, res) => {
     .then(card => res.status(200).send(card))
     .catch((err) => res.status(500).send({ message: 'Ошибка по умолчанию.', ...err }));
 };
-
 
 exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(

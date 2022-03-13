@@ -1,5 +1,5 @@
 const express = require('express')
-const { getCards, addLike, dislikeCard, deleteCardById, createCard } = require('../controllers/cardControllers')
+const { getCards, addLike, dislikeCard, deleteCardById, createCard } = require('../controllers/cards')
 const cardRoutes = express.Router()
 
 cardRoutes.get('/', getCards)
