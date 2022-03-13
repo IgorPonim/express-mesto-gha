@@ -1,16 +1,37 @@
 const { User } = require('../models/usermodel');
-const USERS = require('./../users.json');
 
-exports.getUsers = async (req, res) => {
-  const users = await User.find({})
-  res.send(users)
-  }
-exports.getUserById = async (req, res) => {
-  const users = await User.findById(req.params.id)
-  res.send(users)
+exports.getUsers = (req, res) => {
+  User.find({})
+    .then((users) => res.send(users))
+    .catch(() => res.status(500).send({ message: 'Something broke!' }))
+};
+
+exports.getUserById = (req, res) => {
+  User.findById(req.params.id)
+    .then(user => res.send(user))
+    .catch(() => res.status(500).send({ message: 'Something broke!' }))
+};
+
+exports.createUser = (req, res) => {
+
+  User.create(req.body)
+    .then(user => res.send(user))
+    .catch(() => res.status(500).send({ message: 'Something broke!' }))
+
 }
 
-exports.createUser = async (req, res) => {
-  const user = await User.create(req.body)
-  res.send(user)
-}
+exports.updateUserInfo = (req, res) => {
+  const { name, about } = req.body;
+
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .then(user => res.send(user))
+    .catch(() => res.status(500).send({ message: 'Something broke!' }))
+};
+
+exports.updateAvatar = (req, res) => {
+  const { avatar } = req.body;
+
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+    .then(user => res.send(user))
+    .catch(() => res.status(500).send({ message: 'Something broke!' }))
+};

@@ -5,19 +5,23 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 2,
-    maxlength: 30
+    maxlength: 30,
+    default: "Empty"
   },
   link: {
     type: String,
-    required: true
+    required: true,
+    default: "https://i.pinimg.com/originals/36/19/92/3619926eebdff36483a5ce252efc2815.jpg"
   },
   owner: {
-    type: mongoose.ObjectId,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "user"
   },
   likes: {
     type: [mongoose.ObjectId],
     default: [],
+    ref: 'user'
   },
   createdAt: {
     type: Date,
