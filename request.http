@@ -1,48 +1,64 @@
+"Все что касается пользователей"///////
+"Все что касается пользователей"///////
+######
+//показать всех
 GET http://localhost:3000/users/
 ####
-
+//создать нового
 POST http://localhost:3000/users/
 Content-Type: application/json
 
 {
-
+"name": "tobi"
 
 }
-
+//найти конкретного по айди
 ###
-GET  http://localhost:3000/users/622c2d9dcfb30eab6d387e88
+GET  http://localhost:3000/users/622c3f5f3eba5fbcf0a129f7
+######
+//изменить данные о себе
+PATCH   http://localhost:3000/users/me
+Content-Type: application/json
+
+{
+  "name": "Not admin2",
+  "about": "простой парень"
+}
+######
+//изменить аватар
+PATCH   http://localhost:3000/users/me/avatar
+Content-Type: application/json
+
+{
+  "avatar": "https://i.pinimg.com/originals/f9/88/3e/f9883ea58fd95d84bfce682a779fdb75.jpg"
+}
+######
 
 
 ###################################################################
 
+"Все что касается карточек"///////
+"Все что касается карточек"///////
+#####
+//получить все карточки
 GET http://localhost:3000/cards/
 
 ###
-
+//создать карточку
 POST http://localhost:3000/cards/
 Content-Type: application/json
 
 {
-"name": "look at me"
+"name": "look at me3"
 
 }
 ###################
-POST http://localhost:3000/cards/622cbc55e5cad9a90ca20e9c/likes/
-Content-Type: application/json
+//добавить лайк
+PUT http://localhost:3000/cards/622cc21d6e2f630a3466896b/likes
 
-{
-"likes": 1
-
-}
-
+///убрать лайк
 ########
-DELETE  http://localhost:3000/cards/622c38e7ca003bdf5c10d877
+DELETE  http://localhost:3000/cards/622cc21d6e2f630a3466896b/likes
+
 ##################
-PATCH  http://localhost:3000/cards/622ca675c4d374a27b42439f/likes
-Content-Type: application/json
-
-{
-
-"likes": "[1]"
-
-}
+DELETE  http://localhost:3000/cards/622cc21d6e2f630a3466896b

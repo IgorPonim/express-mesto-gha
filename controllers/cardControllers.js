@@ -8,7 +8,7 @@ exports.getCards = (req, res) => {
 };
 
 exports.deleteCardById = (req, res) => {
-  Card.findByIdAndDelete(req.params.cardId)
+  Card.findByIdAndDelete(req.params.id)
     .then(card => res.send(card))
     .catch(() => res.status(500).send({ message: 'Something broke!' }))
 };
