@@ -4,7 +4,7 @@ const userRoutes = express.Router()
 
 userRoutes.get('/', getUsers)
 
-userRoutes.get('/:id', getUserById)
+userRoutes.get('/:userId', getUserById)
 
 userRoutes.post('/', createUser)
 
