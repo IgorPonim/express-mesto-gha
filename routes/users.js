@@ -1,10 +1,10 @@
 const express = require('express')
-const { getUsers, getUserById, updateAvatar, updateUserInfo, createUser } = require('../controllers/userControllers')
+const { getUsers, getUserById, updateAvatar, updateUserInfo, createUser } = require('../controllers/user')
 const userRoutes = express.Router()
 
 userRoutes.get('/', getUsers)
 
-userRoutes.get('/:id', getUserById)
+userRoutes.get('/:userId', getUserById)
 
 userRoutes.post('/', createUser)
 
