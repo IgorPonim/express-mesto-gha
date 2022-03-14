@@ -10,9 +10,9 @@ Content-Type: application/json
 
 {
 
-"name":"dddd5",
-"about":"dddd",
-"avatar":"dddd"
+"name":"1",
+"about":"123123",
+"avatar":"123132"
 
 
 }
@@ -25,7 +25,7 @@ PATCH   http://localhost:3000/users/me
 Content-Type: application/json
 
 {
-  "name": "Not admin56",
+  "name": "1",
   "about": "простой парень 5"
 }
 ######
@@ -66,4 +66,4 @@ PUT http://localhost:3000/cards/622ca7fdfc5d7939b6396130/likes
 DELETE  http://localhost:3000/cards/622ca7fdfc5d7939b6396130/likes
 
 ##################
-DELETE  http://localhost:3000/cards/622ca7fdfc5d7939b6396130
+GET   http://localhost:3000/cards/622ca8569d97180463baf23c

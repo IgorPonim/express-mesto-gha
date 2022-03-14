@@ -48,7 +48,7 @@ exports.updateUserInfo = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(400).send({ message: 'Некорректные данные ' });
       }
       return res.status(500).send({ message: 'Ошибка по умолчанию.' });
