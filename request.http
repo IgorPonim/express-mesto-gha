@@ -9,9 +9,10 @@ POST http://localhost:3000/users/
 Content-Type: application/json
 
 {
-"name": "tobi",
-"about": "sadasda",
-"avatar": "sadsad.png"
+
+"name":"1",
+"about":"123123",
+"avatar":"123132"
 
 
 }
@@ -24,8 +25,8 @@ PATCH   http://localhost:3000/users/me
 Content-Type: application/json
 
 {
-  "name": "Not admin2",
-  "about": "простой парень2"
+  "name": "1",
+  "about": "простой парень 5"
 }
 ######
 //изменить аватар
@@ -52,17 +53,17 @@ POST http://localhost:3000/cards/
 Content-Type: application/json
 
 {
-"name": "look at me66",
-"link": "look at me555"
+"name": "new Card",
+"link": "link "
 
 }
 ###################
 //добавить лайк
-PUT http://localhost:3000/cards/622dbaca9c3d832eaacdec27/likes
+PUT http://localhost:3000/cards/622ca7fdfc5d7939b6396130/likes
 
 ///убрать лайк
 ########
-DELETE  http://localhost:3000/cards/622dbaca9c3d832eaacdec27/likes
+DELETE  http://localhost:3000/cards/622ca7fdfc5d7939b6396130/likes
 
 ##################
-DELETE  http://localhost:3000/cards/622ca7f4fc5d7939b639612e
+DELETE    http://localhost:3000/cards/622cbc55e9a90ca20e9c
