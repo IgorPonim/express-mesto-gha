@@ -66,4 +66,4 @@ PUT http://localhost:3000/cards/622ca7fdfc5d7939b6396130/likes
 DELETE  http://localhost:3000/cards/622ca7fdfc5d7939b6396130/likes
 
 ##################
-GET   http://localhost:3000/cards/622ca8569d97180463baf23c
+DELETE    http://localhost:3000/cards/622cbc55e9a90ca20e9c

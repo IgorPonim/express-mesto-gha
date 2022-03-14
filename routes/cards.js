@@ -12,7 +12,7 @@ const cardRoutes = express.Router();
 
 cardRoutes.get('/', getCards);
 
-cardRoutes.get('/:cardId', deleteCardById);
+cardRoutes.delete('/:cardId', deleteCardById);
 
 cardRoutes.post('/', createCard);
 
