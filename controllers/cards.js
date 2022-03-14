@@ -3,7 +3,7 @@ const { Card } = require('../models/cardmodel');
 exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch((err) => res.status(500).send({ message: 'Ошибка по умолчанию.', ...err }));
+    .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию.' }));
 };
 
 exports.deleteCardById = (req, res) => {
@@ -15,16 +15,26 @@ exports.deleteCardById = (req, res) => {
         res.status(404).send({ message: 'Карточка не найдена' });
       }
     })
-    .catch((err) => res.status(500).send({ message: 'Ошибка по умолчанию.', ...err }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Невалидный id ' });
+      }
+      return res.status(500).send({ message: 'Ошибка по умолчанию.' });
+    });
 };
 
 exports.createCard = (req, res) => {
-  const ownerId = req.user._id
+  const ownerId = req.user._id;
   const { name, link } = req.body;
   Card.create({ name, link, owner: ownerId })
-    .then(card => res.send(card)).status(200)
-    .catch(() => res.status(500).send({ message: 'Something broke!' }))
-}
+    .then((card) => res.status(200).send(card))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: 'Некорректные данные' });
+      }
+      return res.status(500).send({ message: 'Ошибка по умолчанию.' });
+    });
+};
 
 exports.addLike = (req, res) => {
   Card.findByIdAndUpdate(
@@ -32,8 +42,19 @@ exports.addLike = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then(card => res.status(200).send(card))
-    .catch((err) => res.status(500).send({ message: 'Ошибка по умолчанию.', ...err }));
+    .then((card) => {
+      if (card) {
+        res.status(200).send(card);
+      }
+      return res.status(404).send({ message: 'Карточка не найдена' });
+    })
+
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Невалидный id ' });
+      }
+      return res.status(500).send({ message: 'Ошибка по умолчанию.' });
+    });
 };
 
 exports.dislikeCard = (req, res) => {
@@ -42,6 +63,17 @@ exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .then(card => res.status(200).send(card))
-    .catch((err) => res.status(500).send({ message: 'Ошибка по умолчанию.', ...err }));
+    .then((card) => {
+      if (card) {
+        res.status(200).send(card);
+      } else {
+        res.status(404).send({ message: 'Карточка не найдена' });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Невалидный id ' });
+      }
+      return res.status(500).send({ message: 'Ошибка по умолчанию.' });
+    });
 };
