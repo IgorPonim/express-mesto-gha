@@ -11,11 +11,22 @@ const { routes } = require('./routes/routes');
 //  парсер
 app.use(express.json());
 
-//  мидлВара
+
+
+const cookieParser = require('cookie-parser')
+const errors = require('celebrate')
+const { login, createUser } = require('./controllers/user')
+const auth = require('./middlewares/auth')
+
+
+
+app.post('/signup', createUser);
+app.post('/signin', login);
+app.use(cookieParser());
+app.use(auth)
+
+//  мидлВара чтобы смотреть в терминале
 app.use((req, res, next) => {
-  req.user = {
-    _id: '622c3f5f3eba5fbcf0a129f7',
-  };
   console.log(req.method, req.path);
   next();
 });

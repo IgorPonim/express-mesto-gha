@@ -3,22 +3,41 @@
 ######
 //показать всех
 GET http://localhost:3000/users/
+Accept: application/json,
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjM3MzVlM2JjMjBiYjI0OGJmZDk0OTMiLCJpYXQiOjE2NDc3ODU4MTYsImV4cCI6MTY0ODM5MDYxNn0.lkX_7KFEPaSgcpy5iyTmb8Nc5dawqt_7XqrHUi92aac
 ####
 //создать нового
-POST http://localhost:3000/users/
+POST http://localhost:3000/signup/
 Content-Type: application/json
 
 {
 
-"name":"1",
-"about":"123123",
-"avatar":"123132"
-
+"name": "admin2",
+"email":"admin2@ya.ru",
+"password":"123"
 
 }
+//Войти в свою учетку
+#####
+POST http://localhost:3000/signin/
+Content-Type: application/json
+
+{
+
+"email":"admin2@ya.ru",
+"password":"123"
+
+}
+
+
+
+
 //найти конкретного по айди
 ###
-GET  http://localhost:3000/users/622c3f5f3eba5fbcf0a129f7
+
+GET  http://localhost:3000/users/me
+
 ######
 //изменить данные о себе
 PATCH   http://localhost:3000/users/me
@@ -46,24 +65,31 @@ Content-Type: application/json
 #####
 //получить все карточки
 GET http://localhost:3000/cards/
-
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjM3MzVlM2JjMjBiYjI0OGJmZDk0OTMiLCJpYXQiOjE2NDc3ODU4MTYsImV4cCI6MTY0ODM5MDYxNn0.lkX_7KFEPaSgcpy5iyTmb8Nc5dawqt_7XqrHUi92aac
 ###
 //создать карточку
 POST http://localhost:3000/cards/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjM3MzVlM2JjMjBiYjI0OGJmZDk0OTMiLCJpYXQiOjE2NDc3ODU4MTYsImV4cCI6MTY0ODM5MDYxNn0.lkX_7KFEPaSgcpy5iyTmb8Nc5dawqt_7XqrHUi92aac
 
 {
-"name": "new Card",
+"name": "new Card3",
 "link": "link "
 
 }
 ###################
 //добавить лайк
-PUT http://localhost:3000/cards/622ca7fdfc5d7939b6396130/likes
+PUT http://localhost:3000/cards/623737d1be86b23b211e4b19/likes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjM3MzVlM2JjMjBiYjI0OGJmZDk0OTMiLCJpYXQiOjE2NDc3ODU4MTYsImV4cCI6MTY0ODM5MDYxNn0.lkX_7KFEPaSgcpy5iyTmb8Nc5dawqt_7XqrHUi92aac
 
 ///убрать лайк
 ########
-DELETE  http://localhost:3000/cards/622ca7fdfc5d7939b6396130/likes
+DELETE  http://localhost:3000/cards/623737d1be86b23b211e4b19/likes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjM3MzVlM2JjMjBiYjI0OGJmZDk0OTMiLCJpYXQiOjE2NDc3ODU4MTYsImV4cCI6MTY0ODM5MDYxNn0.lkX_7KFEPaSgcpy5iyTmb8Nc5dawqt_7XqrHUi92aac
+
 
 ##################
 DELETE    http://localhost:3000/cards/622cbc55e9a90ca20e9c
