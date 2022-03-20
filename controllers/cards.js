@@ -74,6 +74,7 @@ exports.dislikeCard = (req, res) => {
       if (err.name === 'CastError') {
         return res.status(400).send({ message: 'Невалидный id ' });
       }
+
       return res.status(500).send({ message: 'Ошибка по умолчанию.' });
     });
 };
