@@ -1,4 +1,5 @@
 const { Card } = require('../models/cardmodel');
+const ForbiddenError = require('../errors/forbiddenError');
 
 exports.getCards = (req, res) => {
   Card.find({})
@@ -6,20 +7,23 @@ exports.getCards = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию.' }));
 };
 
-exports.deleteCardById = (req, res) => {
+exports.deleteCardById = (req, res, next) => {
 
   Card.findByIdAndRemove(req.params.cardId)
 
     .then((card) => {
-      if (card) {
-        res.status(200).send(card);
-      } else {
+      if (!card) {
         res.status(404).send({ message: 'Карточка не найдена' });
       }
+      if (card.owner.valueOf() !== req.user._id) {
+        return next(new ForbiddenError('Нельзя удалять чужие карточки!'));
+      }
+
+      res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(400).send({ message: 'Невалидный id ' });
+        throw new badRequestError('Невалидный id ');
       }
       return res.status(500).send({ message: 'Ошибка по умолчанию.' });
     });

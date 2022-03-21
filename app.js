@@ -14,7 +14,6 @@ app.use(express.json());
 
 
 const cookieParser = require('cookie-parser')
-const errors = require('celebrate')
 const { login, createUser } = require('./controllers/user')
 const auth = require('./middlewares/auth');
 const { signUp, signIn } = require('./middlewares/joiValidation');
