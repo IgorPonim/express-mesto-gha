@@ -1,6 +1,10 @@
-const { User } = require('../models/usermodel');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken')
+const { User } = require('../models/usermodel');
+const DuplicationError = require('../errors/duplicationError');
+const AuthError = require('../errors/authError');
+const NotFoundError = require('../errors/notFoundError');
+const badRequestError = require('../errors/badRequestError')
 
 exports.getUsers = (req, res) => {
   User.find({})
@@ -14,7 +18,7 @@ exports.getUserById = (req, res) => {
       if (user) {
         res.status(200).send(user);
       } else {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        return Promise.reject(new NotFoundError('Пользователь не найден.'));
       }
     })
     .catch((err) => {
@@ -33,7 +37,7 @@ exports.updateUserInfo = (req, res) => {
       if (user) {
         res.status(200).send(user);
       } else {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        return Promise.reject(new NotFoundError('Пользователь не найден.'));
       }
     })
     .catch((err) => {
@@ -52,7 +56,7 @@ exports.updateAvatar = (req, res) => {
       if (user) {
         res.status(200).send(user);
       } else {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        return Promise.reject(new NotFoundError('Пользователь не найден.'));
       }
     })
     .catch((err) => {
@@ -66,7 +70,7 @@ exports.updateAvatar = (req, res) => {
 
 
 exports.createUser = (req, res) => {
-
+  User.findOne({ email: req.body.email }).then((user) => { if (user) throw new DuplicationError(` Пользователь с ${req.body.email} уже зарегистрирован.`) })
   bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
       email: req.body.email,
@@ -78,7 +82,7 @@ exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Некорректные данные' });
+        throw new badRequestError('Неверные данные');
       }
       return res.status(500).send({ message: 'Ошибка по умолчанию.' });
     });
@@ -86,36 +90,32 @@ exports.createUser = (req, res) => {
 
 exports.login = (req, res) => {
   const { email, password } = req.body
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-
+        return Promise.reject(new AuthError('Неправильные почта или пароль'));
       }
 
       bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
+            return Promise.reject(new AuthError('Неправильные почта или пароль'));
           }
           const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
           return res.send({ token });
-
-        })
+        });
     })
     .catch((err) => {
       res.status(401).send({ message: err.message });
     });
 }
 
-
-
 exports.getCurrentUser = (req, res, next) => {
   const { _id } = req.user;
   User.findById(_id).then((user) => {
     // проверяем, есть ли пользователь с таким id
     if (!user) {
-      return Promise.reject(new Error('Пользователь не найден.'));
+      return Promise.reject(new NotFoundError('Пользователь не найден.'));
     }
 
     // возвращаем пользователя, если он есть
