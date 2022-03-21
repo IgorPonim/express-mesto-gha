@@ -7,7 +7,9 @@ exports.getCards = (req, res) => {
 };
 
 exports.deleteCardById = (req, res) => {
+
   Card.findByIdAndRemove(req.params.cardId)
+
     .then((card) => {
       if (card) {
         res.status(200).send(card);
