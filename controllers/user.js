@@ -4,6 +4,7 @@ const { User } = require('../models/usermodel');
 const ConflictError = require('../errors/ConflictError');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
+
 // огласите весь список пожалуйста
 exports.getUsers = (req, res, next) => {
   User.find({})
@@ -12,6 +13,7 @@ exports.getUsers = (req, res, next) => {
       next(err);
     });
 };
+
 // можно посмотреть инфу о пользователе отправив /id
 exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
@@ -26,6 +28,7 @@ exports.getUserById = (req, res, next) => {
       next(err);
     });
 };
+
 // обновить инфу
 exports.updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
@@ -42,6 +45,7 @@ exports.updateUserInfo = (req, res, next) => {
       return next(err);
     });
 };
+
 // обновить аватар
 exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
@@ -57,6 +61,7 @@ exports.updateAvatar = (req, res, next) => {
       return next(err);
     });
 };
+
 // создаем юзера проверяем есть ли уже в базе
 exports.createUser = (req, res, next) => {
   const { email, password } = req.body;
@@ -118,7 +123,8 @@ exports.getCurrentUser = (req, res, next) => {
     }
 
     return res.status(200).send(user);
-  }).catch((err) => {
-    next(err);
-  });
+  })
+    .catch((err) => {
+      next(err);
+    });
 };

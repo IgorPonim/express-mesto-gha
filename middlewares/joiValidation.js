@@ -15,6 +15,7 @@ const signUp = celebrate({
     password: Joi.string().required().min(2).max(10),
   }),
 });
+
 // мега регулярка для валидации ссылок на аватар
 const avatarValidate = celebrate({
   body: Joi.object().keys({

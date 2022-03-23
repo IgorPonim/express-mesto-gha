@@ -10,6 +10,7 @@ exports.getCards = (req, res, next) => {
       next(err);
     });
 };
+
 // удалим карточку по id
 exports.deleteCardById = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
@@ -31,6 +32,7 @@ exports.deleteCardById = (req, res, next) => {
       next(err);
     });
 };
+
 // создаем карточку
 exports.createCard = (req, res, next) => {
   const ownerId = req.user._id;
@@ -44,6 +46,7 @@ exports.createCard = (req, res, next) => {
       return next(err);
     });
 };
+
 // добавить лайк
 exports.addLike = (req, res, next) => {
   Card.findByIdAndUpdate(
@@ -57,11 +60,11 @@ exports.addLike = (req, res, next) => {
       }
       return next(new NotFoundError('Карточка не найдена.'));
     })
-
     .catch((err) => {
       next(err);
     });
 };
+
 // удалить лайк
 exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
