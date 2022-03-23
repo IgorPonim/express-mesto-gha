@@ -1,48 +1,51 @@
 const { Card } = require('../models/cardmodel');
-const ForbiddenError = require('../errors/forbiddenError');
+const ForbiddenError = require('../errors/ForbiddenError');
+const BadRequestError = require('../errors/BadRequestError');
+const NotFoundError = require('../errors/NotFoundError');
 
-exports.getCards = (req, res) => {
+exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию.' }));
+    .catch((err) => {
+      next(err);
+    });
 };
-
+// удалим карточку по id
 exports.deleteCardById = (req, res, next) => {
-
   Card.findByIdAndRemove(req.params.cardId)
 
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Карточка не найдена' });
+        return next(new NotFoundError('Карточка не найдена.'));
       }
       if (card.owner.valueOf() !== req.user._id) {
-        return next(new ForbiddenError('Нельзя удалять чужие карточки!'));
+        return next(new ForbiddenError('Нельзя удалить чужую карточку!'));
       }
 
-      res.status(200).send(card);
+      return res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        throw new badRequestError('Невалидный id ');
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        next(new BadRequestError('Неверный тип данных.'));
       }
-      return res.status(500).send({ message: 'Ошибка по умолчанию.' });
+      next(err);
     });
 };
-
-exports.createCard = (req, res) => {
+// создаем карточку
+exports.createCard = (req, res, next) => {
   const ownerId = req.user._id;
   const { name, link } = req.body;
   Card.create({ name, link, owner: ownerId })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Некорректные данные' });
+        return next(new BadRequestError('Неверный тип данных.'));
       }
-      return res.status(500).send({ message: 'Ошибка по умолчанию.' });
+      return next(err);
     });
 };
-
-exports.addLike = (req, res) => {
+// добавить лайк
+exports.addLike = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -52,18 +55,15 @@ exports.addLike = (req, res) => {
       if (card) {
         res.status(200).send(card);
       }
-      return res.status(404).send({ message: 'Карточка не найдена' });
+      return next(new NotFoundError('Карточка не найдена.'));
     })
 
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(400).send({ message: 'Невалидный id ' });
-      }
-      return res.status(500).send({ message: 'Ошибка по умолчанию.' });
+      next(err);
     });
 };
-
-exports.dislikeCard = (req, res) => {
+// удалить лайк
+exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
@@ -72,15 +72,10 @@ exports.dislikeCard = (req, res) => {
     .then((card) => {
       if (card) {
         res.status(200).send(card);
-      } else {
-        res.status(404).send({ message: 'Карточка не найдена' });
       }
+      return next(new NotFoundError('Карточка не найдена.'));
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(400).send({ message: 'Невалидный id ' });
-      }
-
-      return res.status(500).send({ message: 'Ошибка по умолчанию.' });
+      next(err);
     });
 };

@@ -1,10 +1,13 @@
+//  все взял с тренажера ;
+
 const jwt = require('jsonwebtoken');
+const UnathorizedError = require('../errors/UnathorizedError');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new Error('Необходима авторизация.');
+    throw new UnathorizedError('Необходима авторизация.');
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -13,7 +16,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
-    throw new Error('Необходима авторизация.');
+    throw new UnathorizedError('Необходима авторизация.');
   }
 
   req.user = payload;
