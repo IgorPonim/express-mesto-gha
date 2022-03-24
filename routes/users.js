@@ -7,7 +7,7 @@ const {
   updateUserInfo,
   getCurrentUser,
 } = require('../controllers/user');
-const { avatarValidate } = require('../middlewares/joiValidation');
+const { avatarValidate, userIdValidate, userUpdateValidate } = require('../middlewares/joiValidation');
 
 const userRoutes = express.Router();
 
@@ -15,9 +15,9 @@ userRoutes.get('/', getUsers);
 
 userRoutes.get('/me', getCurrentUser);
 
-userRoutes.get('/:userId', getUserById);
+userRoutes.get('/:userId', userIdValidate, getUserById);
 
-userRoutes.patch('/me', updateUserInfo);
+userRoutes.patch('/me', userUpdateValidate, updateUserInfo);
 
 userRoutes.patch('/me/avatar', avatarValidate, updateAvatar);
 

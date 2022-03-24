@@ -49,5 +49,5 @@ main();
 app.use(routes);
 // ошибки celebrate
 app.use(errors());
-// централизованная обработка ошибок которой не было и за которую вы меня отругали
+
 app.use(mainErrorHadler);

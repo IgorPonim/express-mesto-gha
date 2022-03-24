@@ -4,6 +4,7 @@ const { User } = require('../models/usermodel');
 const ConflictError = require('../errors/ConflictError');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
+
 // огласите весь список пожалуйста
 exports.getUsers = (req, res, next) => {
   User.find({})
@@ -12,20 +13,25 @@ exports.getUsers = (req, res, next) => {
       next(err);
     });
 };
+
 // можно посмотреть инфу о пользователе отправив /id
 exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user) {
-        res.status(200).send(user);
+        return res.status(200).send(user); // один раз код написал и копировал, забывая return-ы
       }
       return next(new NotFoundError('Пользователь не найден'));
     })
 
     .catch((err) => {
-      next(err);
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Неверный тип данных.'));
+      }
+      return next(err);
     });
 };
+
 // обновить инфу
 exports.updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
@@ -34,14 +40,18 @@ exports.updateUserInfo = (req, res, next) => {
     .then((user) => {
       res.status(200).send(user);
     })
-
+    // я спросил старшего студента что вы имеете ввиду,
+    // он сказал использовать else if, или нужно по другому?
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Неверный тип данных.'));
+      } else if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверный тип данных.'));
       }
       return next(err);
     });
 };
+
 // обновить аватар
 exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
@@ -51,12 +61,13 @@ exports.updateAvatar = (req, res, next) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверная ссылка'));
       }
       return next(err);
     });
 };
+
 // создаем юзера проверяем есть ли уже в базе
 exports.createUser = (req, res, next) => {
   const { email, password } = req.body;
@@ -118,7 +129,8 @@ exports.getCurrentUser = (req, res, next) => {
     }
 
     return res.status(200).send(user);
-  }).catch((err) => {
-    next(err);
-  });
+  })
+    .catch((err) => {
+      next(err);
+    });
 };
