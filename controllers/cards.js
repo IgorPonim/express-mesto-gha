@@ -13,8 +13,7 @@ exports.getCards = (req, res, next) => {
 
 // удалим карточку по id
 exports.deleteCardById = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
-
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         return next(new NotFoundError('Карточка не найдена.'));
@@ -22,13 +21,11 @@ exports.deleteCardById = (req, res, next) => {
       if (card.owner.valueOf() !== req.user._id) {
         return next(new ForbiddenError('Нельзя удалить чужую карточку!'));
       }
-
-      return res.status(200).send(card);
+      return Card.findByIdAndRemove(req.params.cardId)
+        .then(() => res.status(200).send(card))
+        .catch(next);
     })
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new BadRequestError('Неверный тип данных.'));
-      }
       next(err);
     });
 };
@@ -56,12 +53,15 @@ exports.addLike = (req, res, next) => {
   )
     .then((card) => {
       if (card) {
-        res.status(200).send(card);
+        return res.status(200).send(card);
       }
       return next(new NotFoundError('Карточка не найдена.'));
     })
     .catch((err) => {
-      next(err);
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Неверный тип данных.'));
+      }
+      return next(err);
     });
 };
 
@@ -74,11 +74,14 @@ exports.dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (card) {
-        res.status(200).send(card);
+        return res.status(200).send(card);
       }
       return next(new NotFoundError('Карточка не найдена.'));
     })
     .catch((err) => {
-      next(err);
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Неверный тип данных.'));
+      }
+      return next(err);
     });
 };

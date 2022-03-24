@@ -19,13 +19,16 @@ exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user) {
-        res.status(200).send(user);
+        return res.status(200).send(user); // один раз код написал и копировал, забывая return-ы
       }
       return next(new NotFoundError('Пользователь не найден'));
     })
 
     .catch((err) => {
-      next(err);
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Неверный тип данных.'));
+      }
+      return next(err);
     });
 };
 
@@ -37,9 +40,12 @@ exports.updateUserInfo = (req, res, next) => {
     .then((user) => {
       res.status(200).send(user);
     })
-
+    // я спросил старшего студента что вы имеете ввиду,
+    // он сказал использовать else if, или нужно по другому?
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Неверный тип данных.'));
+      } else if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверный тип данных.'));
       }
       return next(err);
@@ -55,7 +61,7 @@ exports.updateAvatar = (req, res, next) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверная ссылка'));
       }
       return next(err);
