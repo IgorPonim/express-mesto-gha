@@ -40,15 +40,14 @@ exports.updateUserInfo = (req, res, next) => {
     .then((user) => {
       res.status(200).send(user);
     })
-    // я спросил старшего студента что вы имеете ввиду,
-    // он сказал использовать else if, или нужно по другому?
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Неверный тип данных.'));
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверный тип данных.'));
+      } else {
+        next(err);
       }
-      return next(err);
     });
 };
 
@@ -63,8 +62,11 @@ exports.updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверная ссылка'));
+      } else if (err.name === 'CastError') {
+        next(new BadRequestError('Неверный id'));
+      } else {
+        next(err);
       }
-      return next(err);
     });
 };
 
@@ -95,7 +97,7 @@ exports.createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверные данные о пользователе или неверная ссылка на аватар.'));
       }
-      return next(err);
+      next(err);
     });
 };
 
