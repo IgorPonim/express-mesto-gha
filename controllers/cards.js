@@ -26,7 +26,10 @@ exports.deleteCardById = (req, res, next) => {
         .catch(next);
     })
     .catch((err) => {
-      next(err);
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Неверный тип данных.'));
+      }
+      return next(err);
     });
 };
 
